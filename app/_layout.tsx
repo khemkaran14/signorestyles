@@ -7,13 +7,13 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { Alert, AppState } from 'react-native';
+import { AppState } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAccount } from '../src/store/account';
 import { useLooks } from '../src/store/looks';
 import { useSaved } from '../src/store/saved';
-import { fonts, ToastHost, useTheme } from '../src/ui';
+import { fonts, ToastHost, useTheme, showAlert } from '../src/ui';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 2, networkMode: 'offlineFirst' }, mutations: { networkMode: 'offlineFirst' } } });
@@ -40,7 +40,7 @@ export default function RootLayout() {
   }, []);
   useEffect(() => {
     if (!offerMove) return;
-    Alert.alert('Move your saved looks to your account?', `You have ${offerMove} styled photo${offerMove > 1 ? 's' : ''} saved on this phone. Move them to your account to see them on the website and other devices.`, [
+    showAlert('Move your saved looks to your account?', `You have ${offerMove} styled photo${offerMove > 1 ? 's' : ''} saved on this phone. Move them to your account to see them on the website and other devices.`, [
       { text: 'Not now', style: 'cancel', onPress: () => useAccount.getState().moveGuestLooks(false) },
       { text: 'Move them', onPress: () => useAccount.getState().moveGuestLooks(true) },
     ]);

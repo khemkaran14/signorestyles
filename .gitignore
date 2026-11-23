@@ -16,3 +16,4 @@ android/
 resources/ultimate-style-guide-app/
 resources/*.zip
 coverage/
+public/canvaskit.wasm

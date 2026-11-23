@@ -2,7 +2,7 @@ import { Canvas, Group, Image as SkiaImage, type SkImage } from '@shopify/react-
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Text, View, type LayoutChangeEvent } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withTiming, runOnJS } from 'react-native-reanimated';
+import Animated, { useDerivedValue, useAnimatedStyle, useReducedMotion, useSharedValue, withTiming, runOnJS } from 'react-native-reanimated';
 import { fonts } from '../ui/theme';
 
 type Props = {
@@ -25,6 +25,7 @@ export function PhotoCanvas({ frame, frameId, imgW, imgH, dark, busy, hint, labe
   const [prev, setPrev] = useState<SkImage | null>(null);
   const last = useRef<SkImage | null>(null);
   const fade = useSharedValue(1);
+  const fadeOut = useDerivedValue(() => 1 - fade.value);
 
   useEffect(() => {
     if (!frame) return;
@@ -67,7 +68,7 @@ export function PhotoCanvas({ frame, frameId, imgW, imgH, dark, busy, hint, labe
         <Animated.View style={[{ flex: 1 }, zoomStyle]} accessible accessibilityRole="image" accessibilityLabel={label} accessibilityHint={hint}>
           {size.w > 0 ? (
             <Canvas style={{ width: size.w, height: size.h }}>
-              {prev ? <SkiaImage image={prev} fit="contain" x={0} y={0} width={size.w} height={size.h} /> : null}
+              {prev ? <Group opacity={fadeOut}><SkiaImage image={prev} fit="contain" x={0} y={0} width={size.w} height={size.h} /></Group> : null}
               {frame ? (
                 <Group opacity={fade}>
                   <SkiaImage image={frame} fit="contain" x={0} y={0} width={size.w} height={size.h} />

@@ -3,6 +3,7 @@ import {
   type SkImage, type SkRuntimeEffect, type SkSurface,
 } from '@shopify/react-native-skia';
 import { hexRGB } from './colour';
+import { Platform } from 'react-native';
 import { HIGHLIGHT_SKSL, RECOLOUR_SKSL, WARP_SKSL } from './shaders';
 import type { BodyType, Pixels } from './types';
 import { warpUniforms } from './warpMath';
@@ -56,8 +57,14 @@ export function resampleRGBA(img: SkImage, w: number, h: number): Pixels {
   const s = offscreen(w, h);
   s.getCanvas().drawImageRect(img, Skia.XYWHRect(0, 0, img.width(), img.height()), Skia.XYWHRect(0, 0, w, h), Skia.Paint());
   s.flush();
-  return readRGBA(s.makeImageSnapshot());
+  return readRGBA(portable(s.makeImageSnapshot()));
 }
+
+/**
+ * In the browser every offscreen surface has its own WebGL context, so a GPU image from one
+ * surface draws as blank on another. Copy snapshots to CPU memory there; phones share one context.
+ */
+const portable = (img: SkImage): SkImage => (Platform.OS === 'web' ? img.makeNonTextureImage() ?? img : img);
 
 function offscreen(w: number, h: number): SkSurface {
   const s = Skia.Surface.MakeOffscreen(w, h) ?? Skia.Surface.Make(w, h);
@@ -74,7 +81,7 @@ function shaderPass(w: number, h: number, effect: SkRuntimeEffect, uniforms: num
   paint.setShader(effect.makeShaderWithChildren(uniforms, children));
   s.getCanvas().drawRect(Skia.XYWHRect(0, 0, w, h), paint);
   s.flush();
-  return s.makeImageSnapshot();
+  return portable(s.makeImageSnapshot());
 }
 
 export type LayerPiece = { image: SkImage; x: number; y: number; w: number; h: number };
@@ -86,7 +93,7 @@ export function layerOnGpu(src: SkImage, w: number, h: number, pieces: LayerPiec
   c.drawImageRect(src, Skia.XYWHRect(0, 0, src.width(), src.height()), Skia.XYWHRect(0, 0, w, h), Skia.Paint());
   for (const p of pieces) c.drawImageRect(p.image, Skia.XYWHRect(0, 0, p.w, p.h), Skia.XYWHRect(p.x, p.y, p.w, p.h), Skia.Paint());
   s.flush();
-  return s.makeImageSnapshot();
+  return portable(s.makeImageSnapshot());
 }
 
 export type RecolourStep = { masks: SkImage; channel: 0 | 1 | 2; hex: string; mean: number };

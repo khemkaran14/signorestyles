@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Linking, Pressable, Text, View } from 'react-native';
+import { Linking, Pressable, Text, View } from 'react-native';
 import { API_URL } from '../../src/api/client';
 import { useHealth } from '../../src/api/hooks';
 import { BODY_TYPES } from '../../src/engine/bodyType';
@@ -9,7 +9,7 @@ import { OCCASIONS } from '../../src/engine/browse';
 import { useAccount } from '../../src/store/account';
 import { useLooks } from '../../src/store/looks';
 import { useSaved } from '../../src/store/saved';
-import { Body, Button, Card, Chip, Eyebrow, Field, Screen, Section, Small, Strong, Title, fonts, toast, useTheme } from '../../src/ui';
+import { Body, Button, Card, Chip, Eyebrow, Field, Screen, Section, Small, Strong, Title, fonts, toast, useTheme, showAlert } from '../../src/ui';
 
 const VIBES: [string, string][] = [['ethnic', 'Traditional Indian'], ['western', 'Modern western'], ['fusion', 'A bit of both']];
 const PRIVACY = `${API_URL}/privacy`;
@@ -48,7 +48,7 @@ export default function Profile() {
             <PasswordCard />
             {user.admin ? <Button label="Admin" icon="shield-checkmark-outline" kind="ghost" onPress={() => router.push('/admin')} /> : null}
             <Button label="Sign out" kind="secondary" onPress={() => useAccount.getState().signOut().then(() => toast('Signed out'))} />
-            <Button label="Delete my account and data" kind="ghost" onPress={() => Alert.alert('Delete your account?', 'This deletes your account, style profile, hearts and saved looks on every device and the website. It can’t be undone.', [
+            <Button label="Delete my account and data" kind="ghost" onPress={() => showAlert('Delete your account?', 'This deletes your account, style profile, hearts and saved looks on every device and the website. It can’t be undone.', [
               { text: 'Cancel', style: 'cancel' },
               { text: 'Delete', style: 'destructive', onPress: () => useAccount.getState().deleteAccount().then(() => toast('Account deleted')).catch(e => toast(e.message)) },
             ])} />

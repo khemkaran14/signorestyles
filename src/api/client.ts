@@ -1,4 +1,4 @@
-import * as SecureStore from 'expo-secure-store';
+import { secure } from './secure';
 
 /** Backend base URL, e.g. https://style.livelifetricks.com (set EXPO_PUBLIC_API_URL). */
 export const API_URL = (process.env.EXPO_PUBLIC_API_URL || 'https://style.livelifetricks.com').replace(/\/+$/, '');
@@ -9,13 +9,13 @@ let onUnauthorised: (() => void) | null = null;
 export const setUnauthorisedHandler = (fn: () => void) => { onUnauthorised = fn; };
 
 export async function getToken(): Promise<string | null> {
-  if (token === undefined) token = await SecureStore.getItemAsync(TOKEN_KEY).catch(() => null);
+  if (token === undefined) token = await secure.get(TOKEN_KEY).catch(() => null);
   return token ?? null;
 }
 export async function setToken(t: string | null) {
   token = t;
-  if (t) await SecureStore.setItemAsync(TOKEN_KEY, t);
-  else await SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {});
+  if (t) await secure.set(TOKEN_KEY, t);
+  else await secure.remove(TOKEN_KEY).catch(() => {});
 }
 
 export class ApiError extends Error {

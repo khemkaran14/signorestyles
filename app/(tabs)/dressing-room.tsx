@@ -3,7 +3,7 @@ import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, Pressable, ScrollView, Share, Text, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, Share, Text, View, useWindowDimensions } from 'react-native';
 import ColorPicker, { HueSlider, Panel1 } from 'reanimated-color-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { track } from '../../src/analytics';
@@ -24,7 +24,7 @@ import type { BodyType, Part } from '../../src/engine/types';
 import { useAccount } from '../../src/store/account';
 import { colourTarget, currentColour, MODEL, useDressingRoom } from '../../src/store/dressingRoom';
 import { useLooks } from '../../src/store/looks';
-import { Button, Chip, ChipRow, IconButton, LookPhoto, Segmented, Small, Swatch, fonts, radius, toast, useTheme } from '../../src/ui';
+import { Button, Chip, ChipRow, IconButton, LookPhoto, Segmented, Small, Swatch, fonts, radius, toast, useTheme, showAlert } from '../../src/ui';
 
 const PIECES = piecesJson as TryOnPiece[];
 type Tab = 'colour' | 'swap' | 'body' | 'prompt';
@@ -67,7 +67,7 @@ export default function DressingRoom() {
   }
   async function share() {
     if (!dr.frame) return;
-    Alert.alert('Your styled photo', undefined, [
+    showAlert('Your styled photo', undefined, [
       { text: 'Share…', onPress: () => shareImage(dr.frame!).catch(e => toast(e.message)) },
       { text: 'Save to Photos', onPress: () => saveImageToPhotos(dr.frame!).then(() => toast('Saved to Photos')).catch(e => toast(e.message)) },
       { text: 'Cancel', style: 'cancel' },

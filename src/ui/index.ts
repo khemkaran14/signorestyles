@@ -5,3 +5,4 @@ export * from './photos';
 export * from './toast';
 export * from './banner';
 export * from './screen';
+export * from './alert';

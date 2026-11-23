@@ -1,14 +1,14 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, Text, View, useWindowDimensions } from 'react-native';
+import { Pressable, Text, View, useWindowDimensions } from 'react-native';
 import { useSite } from '../../src/api/hooks';
 import { lookById } from '../../src/engine/browse';
 import { openSavedLook } from '../../src/nav';
 import { useAccount } from '../../src/store/account';
 import { GUEST_MAX, useLooks } from '../../src/store/looks';
 import { useSaved } from '../../src/store/saved';
-import { EmptyState, Eyebrow, PhotoCard, Screen, Segmented, Small, Title, fonts, radius, toast, useTheme } from '../../src/ui';
+import { EmptyState, Eyebrow, PhotoCard, Screen, Segmented, Small, Title, fonts, radius, toast, useTheme, showAlert } from '../../src/ui';
 import { shareDataUrl } from '../../src/dressing/shareThumb';
 
 type Seg = 'looks' | 'styled';
@@ -27,7 +27,7 @@ export default function Saved() {
   function onLong(lid: string) {
     const lk = styled.find(l => l.lid === lid);
     if (!lk) return;
-    Alert.alert('Styled photo', undefined, [
+    showAlert('Styled photo', undefined, [
       { text: 'Share', onPress: () => shareDataUrl(lk.thumb).catch(e => toast(e.message)) },
       { text: 'Delete', style: 'destructive', onPress: () => useLooks.getState().remove(lid, member).then(() => toast('Look deleted')) },
       { text: 'Cancel', style: 'cancel' },

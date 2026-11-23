@@ -30,6 +30,27 @@ npx eas-cli@latest build --profile development --platform android
 Skia, MMKV and the other native modules need a development build (not Expo Go). Set the backend
 with `EXPO_PUBLIC_API_URL` (default `https://style.livelifetricks.com`, see `eas.json`).
 
+## Run the mobile app in a browser
+
+The same app (phone layout, all five tabs and the Dressing Room) runs on the web through
+react-native-web. Skia loads its WebAssembly build from `public/canvaskit.wasm`, which
+`npm install` puts there.
+
+```bash
+npm install
+```
+
+```bash
+npm run web
+```
+
+Open http://localhost:8081, and use your browser's phone view (DevTools → device toolbar) for the
+phone layout. To build static files for hosting: `npm run build:web` (output in `dist/`).
+
+In the browser, Share / Save to Photos download the image, and the sign-in token is kept in
+localStorage. Signing in from a browser only works when the web build is served from the same
+domain as the API (the server blocks cross-site requests).
+
 ## Layout
 
 | Path | What |

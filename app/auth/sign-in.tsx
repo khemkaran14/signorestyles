@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { api } from '../../src/api/client';
 import { useAccount } from '../../src/store/account';
-import { Body, Button, Field, Screen, Small, toast } from '../../src/ui';
+import { Body, Button, Field, Screen, Small, toast, showAlert } from '../../src/ui';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -18,7 +18,7 @@ export default function SignIn() {
   }
   async function forgot() {
     if (!email.trim()) { setErr('Enter your email first.'); return; }
-    try { await api('POST', '/api/auth/forgot', { email: email.trim() }); Alert.alert('Check your email', 'If that address has an account, a reset link is on its way.'); }
+    try { await api('POST', '/api/auth/forgot', { email: email.trim() }); showAlert('Check your email', 'If that address has an account, a reset link is on its way.'); }
     catch (e) { setErr((e as Error).message); }
   }
   return (

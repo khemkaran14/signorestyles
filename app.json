@@ -11,7 +11,9 @@
     "ios": {
       "bundleIdentifier": "com.livelifetricks.styleguide",
       "supportsTablet": false,
-      "config": { "usesNonExemptEncryption": false },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "NSPhotoLibraryAddUsageDescription": "Save your styled looks to your photo library."
       }
@@ -34,14 +36,33 @@
       "expo-asset",
       [
         "expo-splash-screen",
-        { "backgroundColor": "#D6246E", "image": "./assets/splash-icon.png", "imageWidth": 220 }
+        {
+          "backgroundColor": "#D6246E",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 220
+        }
       ],
       [
         "expo-media-library",
-        { "savePhotosPermission": "Save your styled looks to your photo library.", "isAccessMediaLocationEnabled": false }
+        {
+          "savePhotosPermission": "Save your styled looks to your photo library.",
+          "isAccessMediaLocationEnabled": false
+        }
       ]
     ],
-    "experiments": { "typedRoutes": false },
-    "extra": { "router": {} }
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "router": {}
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/icon.png",
+      "name": "The Ultimate Style Guide",
+      "themeColor": "#D6246E",
+      "backgroundColor": "#FFF4F8"
+    }
   }
 }
